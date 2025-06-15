@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Tooltip from './Tooltip';
 import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
+import { useWorkflowStore } from '../stores/workflowStore';
 
 interface WorkflowStepProps {
+  id: string;
   title: string;
   description: string;
   toolName: string;
@@ -11,6 +13,7 @@ interface WorkflowStepProps {
 }
 
 const WorkflowStep: React.FC<WorkflowStepProps> = ({
+  id,
   title,
   description,
   toolName,
@@ -21,6 +24,7 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   const [revisionPrompt, setRevisionPrompt] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dragHandleRef = useRef<HTMLButtonElement>(null);
+  const deleteStep = useWorkflowStore((state) => state.deleteStep);
   // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -98,6 +102,7 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
         <div className="flex flex-col gap-2 ml-4">
           <Tooltip label="Delete this step">
             <button
+              onClick={() => deleteStep(id)}
               className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
               <span className="material-icons !text-xl">delete</span>
