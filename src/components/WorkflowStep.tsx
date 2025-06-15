@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Tooltip from './Tooltip';
+import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 
 interface WorkflowStepProps {
   title: string;
   description: string;
   toolName: string;
   aiReasoning: string;
+  dragHandleProps: DraggableProvidedDragHandleProps | null;
 }
 
 const WorkflowStep: React.FC<WorkflowStepProps> = ({
@@ -13,11 +15,12 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   description,
   toolName,
   aiReasoning,
+  dragHandleProps,
 }) => {
   const [showRevisionBox, setShowRevisionBox] = useState(false);
   const [revisionPrompt, setRevisionPrompt] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  const dragHandleRef = useRef<HTMLButtonElement>(null);
   // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -41,11 +44,11 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
               {toolName}
             </span>
           </div>
-          
+
           <p className="text-gray-600 dark:text-gray-300 mb-4">
             {description}
           </p>
-          
+
           <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
             <p className="text-sm text-gray-500 dark:text-gray-400">
               <span className="font-medium text-gray-700 dark:text-gray-300">AI Reasoning:</span> {aiReasoning}
@@ -91,24 +94,27 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
             </div>
           )}
         </div>
-        
+
         <div className="flex flex-col gap-2 ml-4">
           <Tooltip label="Delete this step">
-            <button 
+            <button
               className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
               <span className="material-icons !text-xl">delete</span>
             </button>
           </Tooltip>
           <Tooltip label="Drag to reorder">
-            <button 
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            >
-              <span className="material-icons !text-xl">drag_indicator</span>
-            </button>
+            <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing">
+              <button
+                ref={dragHandleRef}
+                className="cursor-grab active:cursor-grabbing p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                <span className="material-icons !text-xl">drag_indicator</span>
+              </button>
+            </div>
           </Tooltip>
           <Tooltip label={showRevisionBox ? "Close revision request" : "Ask AI to revise this step"}>
-            <button 
+            <button
               onClick={() => setShowRevisionBox(!showRevisionBox)}
               className="p-2 text-gray-500 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             >
