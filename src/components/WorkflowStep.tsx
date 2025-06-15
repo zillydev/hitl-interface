@@ -9,6 +9,8 @@ interface WorkflowStepProps {
   description: string;
   toolName: string;
   aiReasoning: string;
+  agentName: string;
+  confidenceScore: number;
   dragHandleProps: DraggableProvidedDragHandleProps | null;
 }
 
@@ -18,6 +20,8 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   description,
   toolName,
   aiReasoning,
+  agentName,
+  confidenceScore,
   dragHandleProps,
 }) => {
   const [showRevisionBox, setShowRevisionBox] = useState(false);
@@ -46,6 +50,16 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
             </h3>
             <span className="px-3 py-1 text-sm font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full">
               {toolName}
+            </span>
+            <span className="px-3 py-1 text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full flex items-center gap-1">
+              <span className="material-icons !text-sm">smart_toy</span>
+              {agentName}
+            </span>
+            <span className={`px-3 py-1 text-sm font-medium rounded-full ${confidenceScore >= 0.9 ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
+              confidenceScore >= 0.7 ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
+                'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+              }`}>
+              {Math.round(confidenceScore * 100)}% confidence
             </span>
           </div>
 

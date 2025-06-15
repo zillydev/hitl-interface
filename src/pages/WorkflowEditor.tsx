@@ -90,6 +90,8 @@ const WorkflowEditor: React.FC = () => {
                                   toolName={step.toolName}
                                   aiReasoning={step.aiReasoning}
                                   dragHandleProps={provided.dragHandleProps}
+                                  agentName={step.agentName}
+                                  confidenceScore={step.confidenceScore}
                                 />
                               </div>
                             </div>

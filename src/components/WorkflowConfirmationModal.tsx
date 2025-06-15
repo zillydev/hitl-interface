@@ -64,9 +64,19 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
                               <div className="ml-4">
                                 <h4 className="text-sm font-medium text-gray-900 dark:text-white">{step.title}</h4>
                                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{step.description}</p>
-                                <div className="mt-2">
+                                <div className="mt-2 flex items-center gap-2">
                                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-300">
                                     {step.toolName}
+                                  </span>
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300">
+                                    <span className="material-icons !text-xs mr-1">smart_toy</span>
+                                    {step.agentName}
+                                  </span>
+                                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${step.confidenceScore >= 0.9 ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
+                                    step.confidenceScore >= 0.7 ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
+                                      'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                                    }`}>
+                                    {Math.round(step.confidenceScore * 100)}% confidence
                                   </span>
                                 </div>
                                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 italic">
