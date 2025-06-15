@@ -4,23 +4,16 @@ import { useThemeStore } from '../stores/themeStore';
 const DarkModeToggle: React.FC = () => {
   const { isDark, toggleTheme, setTheme } = useThemeStore();
 
-  // Listen for system or storage changes
+  // Listen for system preference changes
   useEffect(() => {
-    const onStorage = () => {
-      const stored = localStorage.getItem('theme');
-      if (stored) setTheme(stored === 'dark');
-    };
-    
     const onMedia = (e: MediaQueryListEvent) => {
       setTheme(e.matches);
     };
 
-    window.addEventListener('storage', onStorage);
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     mq.addEventListener('change', onMedia);
 
     return () => {
-      window.removeEventListener('storage', onStorage);
       mq.removeEventListener('change', onMedia);
     };
   }, [setTheme]);
