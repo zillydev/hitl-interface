@@ -4,7 +4,7 @@ import DarkModeToggle from '../widgets/DarkModeToggle';
 
 const ChatbotPage: React.FC = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="absolute top-6 right-6">
         <DarkModeToggle />
       </div>

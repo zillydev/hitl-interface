@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ChatbotWidget: React.FC = () => {
   const [input, setInput] = useState('');
+  const navigate = useNavigate();
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder for send logic
+    if (input.trim()) {
+      navigate(`/workflow/${encodeURIComponent(input.trim())}`);
+    }
     setInput('');
   };
 
