@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.1",
+    "@floating-ui/react": "^0.27.12",
     "@tailwindcss/vite": "^4.1.10",
     "@types/react-router-dom": "^5.3.3",
     "framer-motion": "^12.18.1",

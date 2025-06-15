@@ -1,11 +1,28 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DarkModeToggle from '../widgets/DarkModeToggle';
+import WorkflowStep from '../components/WorkflowStep';
 
 const WorkflowEditor: React.FC = () => {
   const { title } = useParams<{ title: string }>();
   const navigate = useNavigate();
   const decodedTitle = decodeURIComponent(title || '');
+
+  // Example workflow steps
+  const exampleSteps = [
+    {
+      title: "Create Lead in Salesforce",
+      description: "Automatically create a new lead when a form is submitted",
+      toolName: "Salesforce",
+      aiReasoning: "This step ensures new leads are properly tracked in your CRM system"
+    },
+    {
+      title: "Send Welcome Email",
+      description: "Send a personalized welcome email to new leads",
+      toolName: "HubSpot",
+      aiReasoning: "First touchpoint with the lead to establish communication"
+    }
+  ];
 
   return (
     <div className="min-h-screen">
@@ -26,11 +43,19 @@ const WorkflowEditor: React.FC = () => {
             </div>
             <DarkModeToggle />
           </div>
-          {/* Workflow editor content will go here */}
+          
           <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 min-h-[600px]">
-            <p className="text-gray-600 dark:text-gray-300">
-              Workflow editor content coming soon...
-            </p>
+            <div className="space-y-4">
+              {exampleSteps.map((step, index) => (
+                <WorkflowStep
+                  key={index}
+                  title={step.title}
+                  description={step.description}
+                  toolName={step.toolName}
+                  aiReasoning={step.aiReasoning}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
