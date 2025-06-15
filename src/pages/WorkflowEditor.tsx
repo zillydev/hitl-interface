@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DarkModeToggle from '../widgets/DarkModeToggle';
 import WorkflowStep from '../components/WorkflowStep';
+import Tooltip from '../components/Tooltip';
 import { DragDropContext, Draggable, Droppable, DropResult, DroppableProvided, DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
 import { useWorkflowStore } from '../stores/workflowStore';
 import WorkflowConfirmationModal from '../components/WorkflowConfirmationModal';
@@ -11,7 +12,7 @@ const WorkflowEditor: React.FC = () => {
   const navigate = useNavigate();
   const decodedTitle = decodeURIComponent(title || '');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const { steps, reorderSteps } = useWorkflowStore();
+  const { steps, reorderSteps, undo, redo, canUndo, canRedo } = useWorkflowStore();
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -50,6 +51,26 @@ const WorkflowEditor: React.FC = () => {
                 </h1>
               </div>
               <div className="flex items-center gap-4">
+                <Tooltip label="Undo (Ctrl+Z)">
+                  <button
+                    onClick={undo}
+                    disabled={!canUndo()}
+                    className="flex items-center justify-center p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Undo"
+                  >
+                    <span className="material-icons !text-xl">undo</span>
+                  </button>
+                </Tooltip>
+                <Tooltip label="Redo (Ctrl+Y)">
+                  <button
+                    onClick={redo}
+                    disabled={!canRedo()}
+                    className="flex items-center justify-center p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Redo"
+                  >
+                    <span className="material-icons !text-xl">redo</span>
+                  </button>
+                </Tooltip>
                 <DarkModeToggle />
               </div>
             </div>

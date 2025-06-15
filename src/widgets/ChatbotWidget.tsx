@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useWorkflowStore } from '../stores/workflowStore';
 
 const ChatbotWidget: React.FC = () => {
   const [input, setInput] = useState('');
   const navigate = useNavigate();
+  const { addToHistory, steps } = useWorkflowStore();
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
+      addToHistory(steps);
       navigate(`/workflow/${encodeURIComponent(input.trim())}`);
     }
     setInput('');
