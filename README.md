@@ -1,6 +1,6 @@
 # HITL Interface
 
-A Human-in-the-Loop interface for workflow generation and management, built with React, TypeScript, and Tailwind CSS v4.
+A Human-in-the-Loop interface for workflow generation and management, built with React, TypeScript, Tailwind CSS v4 and Zustand.
 
 ## Features
 
