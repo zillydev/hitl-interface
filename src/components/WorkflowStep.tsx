@@ -140,10 +140,11 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
     setError(null);
 
     try {
-      await mockRevisionApi.requestRevision({
+      const response = await mockRevisionApi.requestRevision({
         stepId: id,
         revisionPrompt: 'Retry with higher confidence',
       });
+      updateStep(id, response);
     } catch (error) {
       const apiError = error as ApiError;
       setError(apiError.message || 'Failed to retry step');

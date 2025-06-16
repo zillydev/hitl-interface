@@ -63,7 +63,9 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
                               </div>
                               <div className="ml-4">
                                 <h4 className="text-sm font-medium text-gray-900 dark:text-white">{step.title}</h4>
-                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{step.description}</p>
+                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 whitespace-pre-line break-words">
+                                  {step.description}
+                                </p>
                                 <div className="mt-2 flex items-center gap-2">
                                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-300">
                                     {step.toolName}

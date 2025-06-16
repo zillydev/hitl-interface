@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion';
 import ChatbotPage from './pages/ChatbotPage';
 import WorkflowEditor from './pages/WorkflowEditor';
+import KeyboardShortcuts from './components/KeyboardShortcuts';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
     <div className="fixed inset-0 bg-white dark:bg-gray-900 transition-colors duration-300">
+      <KeyboardShortcuts />
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
