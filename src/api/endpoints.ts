@@ -1,4 +1,4 @@
-import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow, GenerateWorkflowStepRequest } from './types';
+import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow } from './types';
 import { apiClient } from './client';
 
 export const revisionApi = {
@@ -10,9 +10,5 @@ export const revisionApi = {
 export const workflowApi = {
   generateWorkflow: (data: GenerateWorkflowRequest): Promise<Workflow> => {
     return apiClient.post<Workflow>('/workflow/generate', data);
-  },
-
-  generateWorkflowStep: (data: GenerateWorkflowStepRequest): Promise<WorkflowStep> => {
-    return apiClient.post<WorkflowStep>('/workflow/step/generate', data);
   },
 }; 

@@ -24,7 +24,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   useEffect(() => {
     effectiveInputRef.current?.focus();
-  }, []);
+  }, [effectiveInputRef]);
 
   return (
     <form
