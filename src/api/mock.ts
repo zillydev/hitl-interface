@@ -128,7 +128,7 @@ const CLARIFICATION_QUESTIONS = [
 ];
 
 export const mockClarificationApi = {
-  getClarificationResponse: async (userInput: string, messageCount: number): Promise<ClarificationResponse> => {
+  getClarificationResponse: async (_userInput: string, messageCount: number): Promise<ClarificationResponse> => {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -195,7 +195,7 @@ export const mockRevisionApi = {
 };
 
 export const mockWorkflowApi = {
-  generateWorkflow: async (data: GenerateWorkflowRequest): Promise<Workflow> => {
+  generateWorkflow: async (_data: GenerateWorkflowRequest): Promise<Workflow> => {
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const success = Math.random() > 0.5;
