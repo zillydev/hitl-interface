@@ -76,7 +76,7 @@ const ChatbotPage: React.FC = () => {
         setIsClarifying(true);
       }
 
-      const response = await mockClarificationApi.getClarificationResponse(userMessage, messages.length + 1);
+      const response = await mockClarificationApi.generateResponse({ messages: [...messages, { role: 'user', content: userMessage }] });
       setMessages(prev => [...prev, { role: 'assistant', content: response.message }]);
 
       if (response.isComplete) {

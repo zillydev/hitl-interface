@@ -1,4 +1,4 @@
-import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow } from './types';
+import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow, ClarificationResponse, Message } from './types';
 
 const MOCK_WORKFLOWS: Workflow[] = [
   {
@@ -147,12 +147,6 @@ const MOCK_WORKFLOWS: Workflow[] = [
   }
 ];
 
-interface ClarificationResponse {
-  message: string;
-  isComplete: boolean;
-  nextQuestion?: string;
-}
-
 const CLARIFICATION_QUESTIONS = [
   {
     initial: "I'll help you create a workflow. Let me ask a few questions to better understand your needs:\n\n1. What is the main goal of this workflow?\n2. Who are the main users of this workflow?\n3. Are there any specific tools or integrations you'd like to include?",
@@ -164,39 +158,33 @@ const CLARIFICATION_QUESTIONS = [
 ];
 
 export const mockClarificationApi = {
-  getClarificationResponse: async (_userInput: string, messageCount: number): Promise<ClarificationResponse> => {
+  generateResponse: async ({ messages }: { messages: Message[] }): Promise<ClarificationResponse> => {
     await new Promise(resolve => setTimeout(resolve, 800));
-
-    const success = Math.random() > 0.5; // 50% success rate
-
+    const success = Math.random() > 0.5;
     if (!success) {
       throw {
-        message: 'Failed to process clarification',
-        code: 'CLARIFICATION_FAILED',
+        message: 'Failed to generate chat response',
+        code: 'CHAT_FAILED',
         status: 500,
       };
     }
-
-    // If this is the first message, return the initial questions
+    const messageCount = messages.length;
+    const lastUserMessage = [...messages].reverse().find(m => m.role === 'user')?.content || '';
     if (messageCount === 1) {
       return {
         message: CLARIFICATION_QUESTIONS[0].initial,
         isComplete: false
       };
     }
-
-    // If we've received all answers, mark as complete
     if (messageCount >= 5) {
       return {
         message: "Thank you for providing all the information. I'll now generate your workflow.",
         isComplete: true
       };
     }
-
-    // Return follow-up questions
     const questionIndex = Math.floor((messageCount - 1) / 2);
     return {
-      message: CLARIFICATION_QUESTIONS[0].followUps[questionIndex],
+      message: CLARIFICATION_QUESTIONS[0].followUps[questionIndex] || `Received: ${lastUserMessage}`,
       isComplete: false
     };
   }
@@ -244,4 +232,17 @@ export const mockWorkflowApi = {
 
     return MOCK_WORKFLOWS[Math.floor(Math.random() * MOCK_WORKFLOWS.length)];
   },
-}; 
+  persistWorkflow: async (workflow: Workflow): Promise<Workflow> => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const success = Math.random() > 0.99;
+    if (!success) {
+      throw {
+        message: 'Failed to save workflow',
+        code: 'WORKFLOW_PERSIST_FAILED',
+        status: 500,
+      };
+    }
+    const now = new Date().toISOString();
+    return { ...workflow, updatedAt: now };
+  },
+};

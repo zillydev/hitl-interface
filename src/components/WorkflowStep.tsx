@@ -40,6 +40,7 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Store
+  const steps = useWorkflowStore((state) => state.steps);
   const deleteStep = useWorkflowStore((state) => state.deleteStep);
   const updateStep = useWorkflowStore((state) => state.updateStep);
 
@@ -117,6 +118,7 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
     try {
       const response = await mockRevisionApi.requestRevision({
         stepId: id,
+        steps: steps,
         revisionPrompt: revisionPrompt.trim(),
       });
 
@@ -138,6 +140,7 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
     try {
       const response = await mockRevisionApi.requestRevision({
         stepId: id,
+        steps: steps,
         revisionPrompt: 'Retry with higher confidence',
       });
       updateStep(id, response);

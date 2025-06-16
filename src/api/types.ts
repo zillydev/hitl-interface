@@ -5,6 +5,7 @@ export interface Message {
 
 export interface RevisionRequest {
   stepId: string;
+  steps: WorkflowStep[];
   revisionPrompt: string;
 }
 
@@ -42,4 +43,10 @@ export interface GenerateWorkflowRequest {
     maxSteps?: number;
     existingWorkflows?: Workflow[];
   };
-} 
+}
+
+export interface ClarificationResponse {
+  message: string;
+  isComplete: boolean;
+  nextQuestion?: string;
+}

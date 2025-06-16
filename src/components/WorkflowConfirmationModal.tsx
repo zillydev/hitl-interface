@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWorkflowStore } from '../stores/workflowStore';
 import { AnimatePresence, motion } from 'framer-motion';
+import { mockWorkflowApi } from '../api/mock';
 
 interface WorkflowConfirmationModalProps {
   isOpen: boolean;
@@ -14,6 +15,35 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
   onApprove,
 }) => {
   const { steps } = useWorkflowStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleApprove = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Compose a workflow object for persistence
+      const workflow = {
+        id: `wf-${Date.now()}`,
+        name: 'Approved Workflow',
+        description: 'Workflow approved by user',
+        steps,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      await mockWorkflowApi.persistWorkflow(workflow);
+      setIsLoading(false);
+      onApprove();
+    } catch (err: any) {
+      setIsLoading(false);
+      setError(err?.message || 'Failed to save workflow. Please try again.');
+    }
+  };
+
+  const handleClose = () => {
+    setError(null);
+    onClose();
+  };
 
   return (
     <AnimatePresence>
@@ -25,7 +55,7 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="fixed inset-0 bg-opacity-50 dark:bg-opacity-50 backdrop-blur-[2px] z-40"
-            onClick={onClose}
+            onClick={handleClose}
           />
           <div className="fixed inset-0 z-50 overflow-y-auto pointer-events-none">
             <div className="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
@@ -89,6 +119,12 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
                           </motion.div>
                         ))}
                       </div>
+                      {error && (
+                        <div className="mt-4 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900 rounded p-2 border border-red-200 dark:border-red-700 flex items-center gap-2">
+                          <span className="material-icons !text-base">error_outline</span>
+                          {error}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -97,17 +133,29 @@ const WorkflowConfirmationModal: React.FC<WorkflowConfirmationModalProps> = ({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
-                    onClick={onApprove}
-                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={handleApprove}
+                    disabled={isLoading}
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Approve & Execute
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        Processing...
+                      </span>
+                    ) : (
+                      'Approve & Execute'
+                    )}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="button"
-                    onClick={onClose}
-                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 sm:mt-0 sm:w-auto sm:text-sm"
+                    onClick={handleClose}
+                    disabled={isLoading}
+                    className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-base font-medium text-gray-700 dark:text-gray-200 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 sm:mt-0 sm:w-auto sm:text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </motion.button>
