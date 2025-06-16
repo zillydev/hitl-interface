@@ -1,23 +1,14 @@
 import { create } from 'zustand';
-
-interface WorkflowStep {
-  id: string;
-  title: string;
-  description: string;
-  toolName: string;
-  aiReasoning: string;
-  agentName: string;
-  confidenceScore: number;
-}
+import { WorkflowStep } from '../api/types';
 
 interface WorkflowStore {
   steps: WorkflowStep[];
   history: WorkflowStep[][];
   currentHistoryIndex: number;
   addToHistory: (newSteps: WorkflowStep[]) => void;
-  setSteps: (steps: WorkflowStep[]) => void;
   reorderSteps: (sourceIndex: number, destinationIndex: number) => void;
   deleteStep: (stepId: string) => void;
+  updateStep: (stepId: string, updates: Partial<WorkflowStep>) => void;
   undo: () => void;
   redo: () => void;
   canUndo: () => boolean;
@@ -61,7 +52,7 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
       toolName: "Calendly",
       aiReasoning: "Proactive engagement to move leads through the sales funnel",
       agentName: "Claude",
-      confidenceScore: 0.92
+      confidenceScore: 0.40
     },
     {
       id: '4',
@@ -106,10 +97,6 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
     set((state) => {
       return addToHistory(state, newSteps);
     }),
-  setSteps: (steps) => set((state) => {
-    state.addToHistory(steps);
-    return state;
-  }),
   reorderSteps: (sourceIndex, destinationIndex) =>
     set((state) => {
       const newSteps = Array.from(state.steps);
@@ -120,6 +107,16 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   deleteStep: (stepId) =>
     set((state) => {
       const newSteps = state.steps.filter((step) => step.id !== stepId);
+      return addToHistory(state, newSteps);
+    }),
+  updateStep: (stepId, updates) =>
+    set((state) => {
+      const newSteps = state.steps.map((step) => {
+        if (step.id === stepId) {
+          return { ...step, ...updates };
+        }
+        return step;
+      });
       return addToHistory(state, newSteps);
     }),
   undo: () =>
