@@ -1,6 +1,6 @@
 # HITL Interface
 
-A Human-in-the-Loop interface for workflow generation and management, built with React, TypeScript, and Tailwind CSS.
+A Human-in-the-Loop interface for workflow generation and management, built with React, TypeScript, and Tailwind CSS v4.
 
 ## Features
 
@@ -28,7 +28,7 @@ npm run build
 
 ## Project Assumptions
 
-1. **AI Integration**: The application assumes integration with an AI service for workflow generation and clarification. Currently using mock APIs.
+1. **AI Integration**: The application assumes integration with an AI service for workflow generation and clarification. Currently using mock APIs with 50% success rate for testing failure scenarios.
 
 2. **Tool Integration**: The system assumes integration with various tools like Salesforce, HubSpot, Calendly, Vidyard, and Asana for workflow execution.
 
@@ -61,15 +61,9 @@ npm run build
 
 ## Future Improvements
 
-1. **AI Integration**:
-   - Real AI service integration
-   - Better conversation handling
-   - Improved generation accuracy
+1. **Actual AI Integration**:
 
-2. **Workflow Execution**:
-   - Actual execution logic
-   - Progress tracking
-   - Error handling
+2. **Actual Workflow Execution**:
 
 3. **User Experience**:
    - Workflow history

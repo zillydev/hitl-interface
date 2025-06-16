@@ -129,11 +129,9 @@ const CLARIFICATION_QUESTIONS = [
 
 export const mockClarificationApi = {
   getClarificationResponse: async (_userInput: string, messageCount: number): Promise<ClarificationResponse> => {
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    // Simulate random success/failure
-    const success = Math.random() > 0.5; // 90% success rate
+    const success = Math.random() > 0.5; // 50% success rate
 
     if (!success) {
       throw {
