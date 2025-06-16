@@ -22,7 +22,7 @@ const MOCK_WORKFLOWS: Workflow[] = [
         toolName: "Salesforce",
         aiReasoning: "Account creation should follow immediately after data collection to maintain momentum",
         agentName: "Claude",
-        confidenceScore: 0.92
+        confidenceScore: 0.37
       },
       {
         id: "step-003",
@@ -32,6 +32,42 @@ const MOCK_WORKFLOWS: Workflow[] = [
         aiReasoning: "Welcome communication helps establish relationship and sets expectations",
         agentName: "Claude",
         confidenceScore: 0.90
+      },
+      {
+        id: "step-004",
+        title: "Schedule Onboarding Call",
+        description: "Set up initial onboarding call with customer success team",
+        toolName: "Calendly",
+        aiReasoning: "Direct communication helps address immediate questions and concerns",
+        agentName: "Claude",
+        confidenceScore: 0.88
+      },
+      {
+        id: "step-005",
+        title: "Create Project Timeline",
+        description: "Generate project timeline and milestones in project management tool",
+        toolName: "Asana",
+        aiReasoning: "Clear timeline helps set expectations and track progress",
+        agentName: "Claude",
+        confidenceScore: 0.85
+      },
+      {
+        id: "step-006",
+        title: "Share Resource Library",
+        description: "Send access to knowledge base and training materials",
+        toolName: "HubSpot",
+        aiReasoning: "Self-service resources empower customers to get started independently",
+        agentName: "Claude",
+        confidenceScore: 0.87
+      },
+      {
+        id: "step-007",
+        title: "Set Up Integration Connections",
+        description: "Configure and test required system integrations",
+        toolName: "Salesforce",
+        aiReasoning: "System integration is crucial for seamless workflow automation",
+        agentName: "Claude",
+        confidenceScore: 0.82
       }
     ],
     createdAt: "2024-03-15T10:00:00Z",
