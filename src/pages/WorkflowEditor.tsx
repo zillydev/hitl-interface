@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import DarkModeToggle from '../widgets/DarkModeToggle';
+import DarkModeToggle from '../components/DarkModeToggle';
 import WorkflowStep from '../components/WorkflowStep';
 import Tooltip from '../components/Tooltip';
 import { DragDropContext, Draggable, Droppable, DropResult, DroppableProvided, DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
@@ -110,7 +110,6 @@ const WorkflowEditor: React.FC = () => {
                                   description={step.description}
                                   toolName={step.toolName}
                                   aiReasoning={step.aiReasoning}
-                                  dragHandleProps={provided.dragHandleProps}
                                   agentName={step.agentName}
                                   confidenceScore={step.confidenceScore}
                                 />

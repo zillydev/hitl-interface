@@ -1,4 +1,4 @@
-import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow, GenerateWorkflowStepRequest } from './types';
+import { RevisionRequest, WorkflowStep, GenerateWorkflowRequest, Workflow } from './types';
 
 const MOCK_WORKFLOWS: Workflow[] = [
   {
@@ -111,14 +111,68 @@ const MOCK_WORKFLOWS: Workflow[] = [
   }
 ];
 
-export const mockRevisionApi = {
-  requestRevision: async (data: RevisionRequest): Promise<WorkflowStep> => {
+interface ClarificationResponse {
+  message: string;
+  isComplete: boolean;
+  nextQuestion?: string;
+}
+
+const CLARIFICATION_QUESTIONS = [
+  {
+    initial: "I'll help you create a workflow. Let me ask a few questions to better understand your needs:\n\n1. What is the main goal of this workflow?\n2. Who are the main users of this workflow?\n3. Are there any specific tools or integrations you'd like to include?",
+    followUps: [
+      "Great! Now, what are the key steps or actions that need to happen in this workflow?",
+      "Finally, are there any specific conditions or triggers that should start this workflow?"
+    ]
+  }
+];
+
+export const mockClarificationApi = {
+  getClarificationResponse: async (userInput: string, messageCount: number): Promise<ClarificationResponse> => {
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     // Simulate random success/failure
-    // const success = Math.random() > 0.1; // 90% success rate
-    const success = true;
+    const success = Math.random() > 0.5; // 90% success rate
+
+    if (!success) {
+      throw {
+        message: 'Failed to process clarification',
+        code: 'CLARIFICATION_FAILED',
+        status: 500,
+      };
+    }
+
+    // If this is the first message, return the initial questions
+    if (messageCount === 1) {
+      return {
+        message: CLARIFICATION_QUESTIONS[0].initial,
+        isComplete: false
+      };
+    }
+
+    // If we've received all answers, mark as complete
+    if (messageCount >= 5) {
+      return {
+        message: "Thank you for providing all the information. I'll now generate your workflow.",
+        isComplete: true
+      };
+    }
+
+    // Return follow-up questions
+    const questionIndex = Math.floor((messageCount - 1) / 2);
+    return {
+      message: CLARIFICATION_QUESTIONS[0].followUps[questionIndex],
+      isComplete: false
+    };
+  }
+};
+
+export const mockRevisionApi = {
+  requestRevision: async (data: RevisionRequest): Promise<WorkflowStep> => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const success = Math.random() > 0.5;
 
     if (!success) {
       throw {
@@ -142,11 +196,9 @@ export const mockRevisionApi = {
 
 export const mockWorkflowApi = {
   generateWorkflow: async (data: GenerateWorkflowRequest): Promise<Workflow> => {
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Simulate random success/failure
-    const success = Math.random() > 0.1; // 90% success rate
+    const success = Math.random() > 0.5;
 
     if (!success) {
       throw {
@@ -156,44 +208,6 @@ export const mockWorkflowApi = {
       };
     }
 
-    // Select a workflow based on the prompt similarity
-    const workflow = MOCK_WORKFLOWS[Math.floor(Math.random() * MOCK_WORKFLOWS.length)];
-
-    // Create a new instance with a new ID to simulate generation
-    return {
-      ...workflow,
-      id: `wf-${Date.now()}`,
-      name: data.name || workflow.name,
-      description: data.description || workflow.description,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-  },
-
-  generateWorkflowStep: async (data: GenerateWorkflowStepRequest): Promise<WorkflowStep> => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Simulate random success/failure
-    const success = Math.random() > 0.1; // 90% success rate
-
-    if (!success) {
-      throw {
-        message: 'Failed to generate workflow step',
-        code: 'GENERATION_FAILED',
-        status: 500,
-      };
-    }
-
-    // Generate a mock workflow step based on the prompt
-    return {
-      id: `step-${Date.now()}`,
-      title: `Generated step from: ${data.prompt.substring(0, 30)}...`,
-      description: `This is a generated step based on the prompt: ${data.prompt}`,
-      toolName: data.context?.toolPreferences?.[0] || "Default Tool",
-      aiReasoning: "Generated based on the provided prompt and context",
-      agentName: "Claude",
-      confidenceScore: 0.85
-    };
+    return MOCK_WORKFLOWS[Math.floor(Math.random() * MOCK_WORKFLOWS.length)];
   },
 }; 

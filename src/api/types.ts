@@ -1,3 +1,8 @@
+export interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export interface RevisionRequest {
   stepId: string;
   revisionPrompt: string;
@@ -17,14 +22,6 @@ export interface ApiError {
   message: string;
   code?: string;
   status?: number;
-}
-
-export interface GenerateWorkflowStepRequest {
-  prompt: string;
-  context?: {
-    previousSteps?: WorkflowStep[];
-    toolPreferences?: string[];
-  };
 }
 
 export interface Workflow {

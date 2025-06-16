@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Tooltip from './Tooltip';
-import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
 import { useWorkflowStore } from '../stores/workflowStore';
 import { mockRevisionApi } from '../api/mock';
 import { ApiError } from '../api/types';
@@ -13,7 +12,6 @@ interface WorkflowStepProps {
   aiReasoning: string;
   agentName: string;
   confidenceScore: number;
-  dragHandleProps: DraggableProvidedDragHandleProps | null;
 }
 
 const WorkflowStep: React.FC<WorkflowStepProps> = ({
@@ -24,7 +22,6 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   aiReasoning,
   agentName,
   confidenceScore,
-  dragHandleProps,
 }) => {
   // State
   const [showRevisionBox, setShowRevisionBox] = useState(false);
@@ -41,7 +38,6 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement>(null);
-  const dragHandleRef = useRef<HTMLButtonElement>(null);
 
   // Store
   const deleteStep = useWorkflowStore((state) => state.deleteStep);
@@ -327,16 +323,6 @@ const WorkflowStep: React.FC<WorkflowStepProps> = ({
             >
               <span className="material-icons !text-xl">delete</span>
             </button>
-          </Tooltip>
-          <Tooltip label="Drag to reorder">
-            <div {...dragHandleProps} className="cursor-grab active:cursor-grabbing">
-              <button
-                ref={dragHandleRef}
-                className="cursor-grab active:cursor-grabbing p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <span className="material-icons !text-xl">drag_indicator</span>
-              </button>
-            </div>
           </Tooltip>
           <Tooltip label={showRevisionBox ? "Close revision request" : "Ask AI to revise this step"}>
             <button
